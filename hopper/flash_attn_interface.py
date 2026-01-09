@@ -126,7 +126,11 @@ def _flash_attn_forward(
         pack_gqa,
         sm_margin,
     )
-
+       
+    # PATCH: Clone outputs to satisfy PyTorch custom_op aliasing checks
+    if out is not None: out = out.clone()
+    if softmax_lse is not None: softmax_lse = softmax_lse.clone()
+        
     if out_accum is None:
         out_accum = torch.tensor([], device=out.device)
 
